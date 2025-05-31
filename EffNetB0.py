@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D, Input
 from tensorflow.keras.models import Model
@@ -48,16 +49,19 @@ val_labels = labels[:val_size]
 # === Dataset loading and preprocessing ===
 def load_and_preprocess_image(path, label):
     image = tf.io.read_file(path)
-    image = tf.image.decode_jpeg(image, channels=3)  # adjust if png
+    image = tf.image.decode_image(image, channels=3)
+    image.set_shape([None, None, 3])  # Set shape here!
     image = tf.image.resize(image, [IMG_SIZE, IMG_SIZE])
 
-    # Data augmentation for training
+    # Optional augmentation (only on training dataset)
     image = tf.image.random_flip_left_right(image)
     image = tf.image.random_brightness(image, max_delta=0.1)
-    
-    # Preprocess for EfficientNet
+
+    # Preprocess for EfficientNet (normalization)
     image = tf.keras.applications.efficientnet.preprocess_input(image)
+
     return image, label
+
 
 def load_and_preprocess_image_noaug(path, label):
     image = tf.io.read_file(path)
@@ -97,6 +101,12 @@ callbacks = [
     ModelCheckpoint(MODEL_PATH, save_best_only=True, monitor='val_loss')
 ]
 
+for images, labels in train_dataset.take(1):
+    print(images.shape)  # Should be (batch_size, IMG_SIZE, IMG_SIZE, 3)
+    print(labels.shape)  # Should be (batch_size,)
+    print(labels.dtype)  # Should be int32 or int64
+
+
 # === Initial Training ===
 print("Intially Trained Model... \n")
 history = model.fit(
@@ -104,8 +114,6 @@ history = model.fit(
     validation_data=val_dataset,
     epochs=EPOCHS,
     callbacks=callbacks,
-    workers=4,
-    use_multiprocessing=True
 )
 
 # === Fine-tuning ===
@@ -121,8 +129,6 @@ history_fine = model.fit(
     validation_data=val_dataset,
     epochs=7,
     callbacks=callbacks,
-    workers=4,
-    use_multiprocessing=True
 )
 
 # === Evaluation ===
@@ -133,7 +139,6 @@ true_labels = []
 for _, lbls in val_dataset.unbatch():
     true_labels.append(int(lbls.numpy()))
 
-from sklearn.metrics import classification_report, confusion_matrix
 
 print(confusion_matrix(true_labels, val_preds_labels))
 print(classification_report(true_labels, val_preds_labels))
