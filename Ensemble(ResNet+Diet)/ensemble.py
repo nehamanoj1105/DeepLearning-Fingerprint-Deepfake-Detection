@@ -52,18 +52,14 @@ deit = deit.to(device)
 resnet18.train()
 deit.train()
 
-# ========================
 # LOSS & OPTIMIZER
-# ========================
 # Use CrossEntropyLoss for classification
 criterion = nn.CrossEntropyLoss()
 
 # Combine parameters from both models into a single optimizer
 optimizer = optim.Adam(list(resnet18.parameters()) + list(deit.parameters()), lr=learning_rate)
 
-# ========================
 # TRAINING LOOP
-# ========================
 for epoch in range(num_epochs):
     running_loss, correct_preds, total_preds = 0.0, 0, 0
     loop = tqdm(train_loader, desc=f"Epoch [{epoch+1}/{num_epochs}]", leave=False)  # Progress bar
@@ -100,9 +96,7 @@ for epoch in range(num_epochs):
 
     print(f"Epoch {epoch+1}/{num_epochs} - Loss: {epoch_loss:.4f}, Accuracy: {epoch_acc:.4f}")
 
-# ========================
 # VALIDATION LOOP
-# ========================
 resnet18.eval()
 deit.eval()
 
