@@ -50,6 +50,18 @@ Given the complexity of biometric spoof detection, deep learning is more effecti
 | EfficientNet-B0   | High accuracy with efficient scaling   | Optimized CNN      |
 | ViT-Small         | Captures global context and structure  | Vision Transformer |
 
+## Ensemble Strategy
+
+Extensive ensemble combinations between ResNet18, EfficientNetB0, and DeiT-Small were implemented:
+
+**Pairwise Ensembles:**
+
+- ResNet18 + EfficientNetB0  
+- ResNet18 + DeiT-Small  
+- EfficientNetB0 + DeiT-Small  
+
+**Final Ensemble:**  
+Combines outputs of all three models (ResNet18, EfficientNetB0, DeiT-Small) using weighted averaging or majority voting for improved spoof detection accuracy.
 
 
 ## Challenges Faced
