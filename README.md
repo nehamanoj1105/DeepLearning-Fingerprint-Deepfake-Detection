@@ -30,7 +30,7 @@ Fingerprint images were processed using the following steps:
 
 ## Traditional Machine Learning Models
 
-We used traditional ML classifiers as a baseline:
+We used traditional ML classifiers :
 
 - `svm.py`: Implements Support Vector Machine classifier
 - `xgboost_fingerprint.py`: Implements XGBoost classifier
@@ -48,7 +48,7 @@ Given the complexity of biometric spoof detection, deep learning is more effecti
 | SimpleCNN         | Lightweight, fast                      | Shallow CNN        |
 | ResNet-18         | Robust deep feature extraction         | Residual CNN       |
 | EfficientNet-B0   | High accuracy with efficient scaling   | Optimized CNN      |
-| DEIT              | Captures global context and structure  | Vision Transformer |
+| DEIT              | Captures global context and structure  | Transformer Model  |
 
 ## Ensemble Strategy
 
